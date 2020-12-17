@@ -1,7 +1,8 @@
-function getVisitTime() {
-    const value = `lastVisit=`;
-    const c = document.cookie.split(";")
-                             .find(el => el.trim().startsWith(value));
+function cookieGet(name){
+    const value = `${name}=`;
+    const c = document.cookie.split(/;\s?/)
+              .find(el => el.startsWith(value)) || '';
+
     return c.slice(value.length);
 }
 
@@ -16,18 +17,8 @@ function setVisitTime() {
     document.cookie = `animName=${animationName};${expires};path=/`;
 }
 
- function getAnimation() {
-    const name = `animName=`;
-    const c = document.cookie
-                .split(";")
-                .find(el => el.trim().startsWith(name));
-
-    return c.slice(name.length + 1) || '';
-}
-
-
 function countVisitTime() {
-    let broad = getVisitTime();
+    let broad = cookieGet('lastVisit');
     let time = new Date() - new Date(broad);
     let forText = document.querySelector("p");
 
@@ -49,14 +40,21 @@ function countVisitTime() {
 
 }
 
+function addAnimToCookie(ev) {
+    clearInterval(id);
+    setAnimation(ev.target.value);
+    useAnim();
+}
 
+function useAnim() {
+    let animFromCookie = cookieGet('animName');
 
-countVisitTime();
+    demonstrationDiv.innerText = "";
+    document.title = "";
 
-
-
-const list = document.querySelector("#chooseAnim");
-const demonstrationDiv = document.querySelector(".animSector");
+    animations[animFromCookie]({count: 0});
+    id = setInterval(animations[animFromCookie], 1000, {count:1});
+}
 
 function anim1(obj) {
     const symbols = ["⬅","⬆","➡","⬇"];
@@ -140,96 +138,25 @@ function anim10(obj) {
     obj.count++;
 }
 
+const list = document.querySelector("#chooseAnim");
+const demonstrationDiv = document.querySelector(".animSector");
+let id = 0;
 
-function addAnimToCookie(ev) {
-    setAnimation(ev.target.value);
-}
+const animations = {
+    anim1 : anim1,
+    anim2 : anim2,
+    anim3 : anim3,
+    anim4 : anim4,
+    anim5 : anim5,
+    anim6 : anim6,
+    anim7 : anim7,
+    anim8 : anim8,
+    anim9 : anim9,
+    anim10 : anim10 
+};
 
-
-function useAnim() {
-    let animFromCookie = getAnimation();
-    switch(animFromCookie) {
-        case "anim1": {
-            demonstrationDiv.innerText = "";
-            document.title = "";
-            anim1({count: 0});
-            setInterval(anim1, 1000, {count:1});
-            break;
-        }
-        case "anim2": {
-            demonstrationDiv.innerText = "";
-            document.title = "";
-            anim2({count: 0});
-            setInterval(anim2, 1000, {count:1});
-            break;
-        }
-        case "anim3": {
-            demonstrationDiv.innerText = "";
-            document.title = "";
-            anim3({count: 0});
-            setInterval(anim3, 1000, {count:1});
-            break;
-        }
-        case "anim4": {
-            demonstrationDiv.innerText = "";
-            document.title = "";
-            anim4({count: 0});
-            setInterval(anim4, 1000, {count:1});
-            break;
-        }
-        case "anim5": {
-            demonstrationDiv.innerText = "";
-            document.title = "";
-            anim5({count: 0});
-            setInterval(anim5, 1000, {count:1});
-            break;
-        }
-        case "anim6": {
-            demonstrationDiv.innerText = "";
-            document.title = "";
-            anim6({count: 0});
-            setInterval(anim6, 1000, {count:1});
-            break;
-        }
-        case "anim7": {
-            demonstrationDiv.innerText = "";
-            document.title = "";
-            anim7({count: 0});
-            setInterval(anim7, 1000, {count:1});
-            break;
-        }
-        case "anim8": {
-            demonstrationDiv.innerText = "";
-            document.title = "";
-            anim8({count: 0});
-            setInterval(anim8, 1000, {count:1});
-            break;
-        }
-        case "anim9": {
-            demonstrationDiv.innerText = "";
-            document.title = "";
-            anim9({count: 0});
-            setInterval(anim9, 1000, {count:1});
-            break;
-        }
-        case "anim10": {
-            demonstrationDiv.innerText = "";
-            document.title = "";
-            anim10({count: 0});
-            setInterval(anim10, 1000, {count:1});
-            break;
-        }
-    }   
-}
-
-
-
+countVisitTime();
 list.addEventListener("input", addAnimToCookie);
 
 useAnim();
-
-
 setVisitTime();
-
-
-
